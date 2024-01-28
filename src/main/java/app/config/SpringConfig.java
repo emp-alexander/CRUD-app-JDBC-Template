@@ -1,4 +1,4 @@
-package first_project.config;
+package app.config;
 
 
 import org.springframework.context.annotation.ComponentScan;
@@ -16,7 +16,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 
 @Configuration
-@ComponentScan("first_project.config")
+@ComponentScan("app")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
 
