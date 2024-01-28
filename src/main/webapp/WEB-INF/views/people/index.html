@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Все люди</title>
 </head>
 <body>
-    <p>test</p>
+<div th:each="person : ${people}">
+    <a th:href="@{/people/{id}(id=${person.getId()})}"
+       th:text="${person.getFio() + ', ' + person.getYearOfBirth()}">user</a>
+</div>
+
+<br/>
+<hr/>
+
 </body>
 </html>
