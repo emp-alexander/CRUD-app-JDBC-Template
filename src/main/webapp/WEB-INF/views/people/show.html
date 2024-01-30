@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Info about person</title>
+</head>
+<body>
+<p th:text="${person.getFio()}">VALUE</p>
+<p th:text="${'Birthday:' + person.getYearOfBirth()}">VALUE</p>
+<p th:text="${person.getId()}">VALUE</p>
+
+<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
+</body>
+</html>

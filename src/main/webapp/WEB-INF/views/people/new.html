@@ -5,6 +5,14 @@
     <title>Title</title>
 </head>
 <body>
+<form th:method="POST" th:action="@{/people}" th:object="${person}">
+    <label th:for="fio">Enter fio: </label>
+    <input type="text" th:field="*{fio}" id="fio"/>
+    <br/>
+    <label th:for="yearOfBirth">Enter birthday: </label>
+    <input type="text" th:field="*{yearOfBirth}" id="yearOfBirth"/>
+    <input type="submit" value="Create!"/>
+</form>
 
 </body>
 </html>
