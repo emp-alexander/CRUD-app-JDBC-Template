@@ -28,4 +28,17 @@ public class PersonDAO {
                 .stream().findAny().orElse(null);
     }
 
+    public void save(Person person) {
+        jdbcTemplate.update("INSERT INTO Person(fio, year_of_birth) VALUES (?, ?)", person.getFio(),
+                person.getYearOfBirth());
+    }
+
+    public void update(int id, Person updatedPerson) {
+        jdbcTemplate.update("UPDATE Person SET fio=?, year_of_birth=? WHERE id=?", updatedPerson.getFio(),
+                updatedPerson.getYearOfBirth(), id);
+    }
+
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM Person WHERE id=?", id);
+    }
 }
