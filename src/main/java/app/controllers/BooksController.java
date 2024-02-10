@@ -1,53 +1,62 @@
 package app.controllers;
 
+import app.dao.BookDAO;
+import app.model.Book;
+import app.model.Person;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/books")
 public class BooksController {
-    private int id;
-    private String name;
-    private String author;
-    private int year;
+    private final BookDAO booksDAO;
 
-    public BooksController() {
+    public BooksController(BookDAO booksDAO) {
+        this.booksDAO = booksDAO;
     }
 
-    public BooksController(int id, String name, String author, int year) {
-        this.id = id;
-        this.name = name;
-        this.author = author;
-        this.year = year;
+    @GetMapping()
+    public String showBook(Model model) {
+        model.addAttribute("books", booksDAO.index());
+        return "books/books-list";
     }
 
-    public int getId() {
-        return id;
+    @GetMapping("/{id}")
+    public String showBook(@PathVariable("id") int id, Model model) {
+        model.addAttribute("book", booksDAO.show(id));
+        return "books/show-books";
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @GetMapping("/new-book")
+    public String newBook(Model model) {
+        model.addAttribute("book", new Book());
+        return "books/new-book";
     }
 
-    public String getName() {
-        return name;
+    @PostMapping()
+    public String create(@ModelAttribute("book") @Valid Book book) {
+        booksDAO.save(book);
+        return "redirect:/books";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id) {
+        model.addAttribute("book", booksDAO.show(id));
+        return "books/edit-book";
     }
 
-    public String getAuthor() {
-        return author;
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("book") @Valid Book book, @PathVariable("id") int id){
+        booksDAO.update(id, book);
+        return "redirect:/books";
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        booksDAO.delete(id);
+        return "redirect:/books";
     }
 }

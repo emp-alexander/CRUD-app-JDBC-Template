@@ -5,6 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-
+<form th:method="PATCH" th:action="@{/books/{id}(id=${book.getId()})}" th:object="${book}">
+    <label th:for="name">Enter name book: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <br/>
+    <label th:for="author">Enter author of book: </label>
+    <input type="text" th:field="*{author}" id="author"/>
+    <br/>
+    <label th:for="year">Enter year of book: </label>
+    <input type="text" th:field="*{year}" id="year"/>
+    <br/>
+    <input type="submit" value="Update!"/>
+</form>
 </body>
 </html>
