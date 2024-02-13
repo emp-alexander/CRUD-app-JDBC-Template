@@ -1,5 +1,6 @@
 package app.dao;
 
+import app.model.Book;
 import app.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -26,6 +27,11 @@ public class PersonDAO {
     public Person show(int id) {
         return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
                 .stream().findAny().orElse(null);
+    }
+
+    //получения списка книг взятых определенным человеком
+    public List<Book> getBooksByPerson(int id){
+        return jdbcTemplate.query("SELECT * FROM BOOK WHERE Person_id=?", new BeanPropertyRowMapper<>(Book.class), id);
     }
 
     public void save(Person person) {

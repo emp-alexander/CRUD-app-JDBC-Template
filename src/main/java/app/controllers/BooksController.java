@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.dao.BookDAO;
+import app.dao.PersonDAO;
 import app.model.Book;
 import app.model.Person;
 import org.springframework.stereotype.Controller;
@@ -8,14 +9,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
 public class BooksController {
     private final BookDAO booksDAO;
+    private final PersonDAO personDAO;
 
-    public BooksController(BookDAO booksDAO) {
+    public BooksController(BookDAO booksDAO, PersonDAO personDAO) {
         this.booksDAO = booksDAO;
+        this.personDAO = personDAO;
     }
 
     @GetMapping()
@@ -25,8 +29,15 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public String showBook(@PathVariable("id") int id, Model model) {
+    public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", booksDAO.show(id));
+        Optional<Person> personOwner = booksDAO.getBookOwner(id);
+        if (personOwner.isPresent()) {
+            model.addAttribute("person_owner", personOwner.get());
+        }
+        else {
+            model.addAttribute("people", personDAO.index());
+        }
         return "books/show-books";
     }
 
@@ -48,6 +59,8 @@ public class BooksController {
         return "books/edit-book";
     }
 
+
+
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("book") @Valid Book book, @PathVariable("id") int id){
         booksDAO.update(id, book);
@@ -59,4 +72,18 @@ public class BooksController {
         booksDAO.delete(id);
         return "redirect:/books";
     }
+
+    @PatchMapping("/{id}/release")
+    public String release(@PathVariable int id){
+        booksDAO.release(id);
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assign(@PathVariable int id, @ModelAttribute("person") Person selectPerson){
+        booksDAO.assign(id, selectPerson);
+        return "redirect:/books";
+    }
+
+
 }

@@ -9,6 +9,24 @@
 <p th:text="${'Birthday:' + person.getYearOfBirth()}">VALUE</p>
 <p th:text="${person.getId()}">VALUE</p>
 
+<div th:if="${#lists.isEmpty(books)}">
+    <p>Person have not books</p>
+</div>
+<hr>
+<br/>
+<!---->
+<div th:unless="${#lists.isEmpty(books)}">
+    <h4>Books:</h4>
+    <div th:each="book : ${books}">
+        <a th:href="@{/books/{id}(id=${book.getId()})}">
+            <span th:text="${book.getName()}"></span>,
+            <span th:text="${book.getAuthor()}"></span>,
+            <span th:text="${book.getYear()}"></span>
+        </a>
+    </div>
+</div>
+<br/>
+
 <a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Delete"/>
