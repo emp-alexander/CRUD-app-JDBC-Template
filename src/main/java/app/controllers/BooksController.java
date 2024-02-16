@@ -6,6 +6,7 @@ import app.model.Book;
 import app.model.Person;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,12 +49,14 @@ public class BooksController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("book") @Valid Book book) {
+    public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return "books/new-book";
         booksDAO.save(book);
         return "redirect:/books";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/edit-book")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("book", booksDAO.show(id));
         return "books/edit-book";
@@ -62,7 +65,10 @@ public class BooksController {
 
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("book") @Valid Book book, @PathVariable("id") int id){
+    public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, @PathVariable("id") int id){
+        if(bindingResult.hasErrors())
+            return "books/edit-book";
+
         booksDAO.update(id, book);
         return "redirect:/books";
     }
